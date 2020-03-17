@@ -103,7 +103,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         textView.setText("Logging you in, Please wait....");
                         textView.setTextColor(GREEN);
                         finish();
-                        startActivity(new Intent(Login.this,MainActivity.class));
+                        startActivity(new Intent(Login.this,profile.class));
 
                     }else
                         if (users.isEmailVerified() && (users.getDisplayName()==null || users.getPhotoUrl() == null)) {

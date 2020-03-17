@@ -77,8 +77,8 @@ public class splash extends AppCompatActivity {
                 pub.start();
             }
         }else {
-            text.setText("No User");
-            Toast.makeText(splash.this, "NO new user found", Toast.LENGTH_LONG).show();
+            text.setText("User");
+            //Toast.makeText(splash.this, "NO new user found", Toast.LENGTH_LONG).show();
             login=new Thread(new Runnable() {
                 @Override
                 public void run() {

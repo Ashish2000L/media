@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:visibility="gone"/>
+            android:visibility="gone" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,11 +44,12 @@
                android:layout_centerHorizontal="true"
                android:id="@+id/progress_bar"/>
        </RelativeLayout>
+
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:textSize="15dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:id="@+id/edit_txt"
@@ -56,6 +57,20 @@
             android:hint="Dsplay Name"
             android:singleLine="true"
             android:gravity="center"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:id="@+id/tvdispname"
+                android:gravity="center"
+                style="@style/TextAppearance.AppCompat.Large"
+                android:visibility="gone"
+                />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

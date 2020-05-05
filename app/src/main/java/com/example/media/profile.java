@@ -124,66 +124,6 @@ public class profile extends AppCompatActivity {
         }
     }
 
-
-
-
-
-
-   /* private void loadUserInfo() {
-
-        final FirebaseUser user=mAuth.getCurrentUser();
-        if(user!=null) {
-            if (user.getPhotoUrl() != null) {
-                Glide.with(this)
-                        .load(user.getPhotoUrl().toString())
-                        .centerCrop()
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                progress.setVisibility(View.GONE);
-                                Log.e("TAG","Error loading Image",e);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                progress.setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .into(imageView);
-
-            }
-
-            if (user.getDisplayName() != null) {
-
-                name.setText(user.getDisplayName());
-            }
-        }
-
-        if(user.isEmailVerified()){
-            tvVerification.setText("Verified");
-            tvVerification.setTextColor(GREEN);
-        }else{
-            tvVerification.setText("Email Not Verified (Click to Verify)");
-            tvVerification.setTextColor(BLUE);
-            tvVerification.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(profile.this,"Verification email Sent",Toast.LENGTH_LONG).show();
-                        }
-                    });
-
-                }
-            });
-        }
-
-
-    }*/
-
     private void SaveUserInfo() {
         String Displayname=name.getText().toString();
         displayname.setText(Displayname);

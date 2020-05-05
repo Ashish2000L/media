@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:indeterminate="true"
+            android:indeterminate="false"
             android:id="@+id/Hprogress"
             android:visibility="gone"/>
         <ImageView

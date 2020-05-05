@@ -37,7 +37,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static java.lang.Thread.sleep;
 
-public class Signup extends AppCompatActivity implements View.OnClickListener {
+public class Signup extends AppCompatActivity  {
 
     private EditText name,email,username,password,cnfpassword;
    Button reg;
@@ -68,56 +68,68 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         progress=(ProgressBar)findViewById(R.id.progressbar);
         text=(TextView)findViewById(R.id.tvuser);
 
-        reg.setOnClickListener(this);
-        login.setOnClickListener(this);
+
 
         mAuth = FirebaseAuth.getInstance(); //Initialization of firebase Auth
 
-    }
-    private void registerUser(){
-        String Name=name.getText().toString();
-        String Email=email.getText().toString().trim();
-        String Username=username.getText().toString().trim();
-        String Password=password.getText().toString().trim();
-        String Confirm_Password=cnfpassword.getText().toString().trim();
+        reg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerUser();
+            }
+        });
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Signup.this,Login.class));
+            }
+    });
 
-        if(Name.isEmpty()){
+    }
+    private void registerUser() {
+        String Name = name.getText().toString();
+        String Email = email.getText().toString().trim();
+        String Username = username.getText().toString().trim();
+        String Password = password.getText().toString().trim();
+        String Confirm_Password = cnfpassword.getText().toString().trim();
+
+        if (Name.isEmpty()) {
             name.setError("Name is Required");
             name.requestFocus();
             return;
         }
-        if(Email.isEmpty()){
+        if (Email.isEmpty()) {
             email.setError("Email is Required");
             email.requestFocus();
             return;
 
         }
-        if(!Patterns.EMAIL_ADDRESS.matcher(Email).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
             email.setError("Please Enter a Valid Email");
             email.requestFocus();
             return;
         }
-        if (Username.isEmpty()){
+        if (Username.isEmpty()) {
             username.setError("Username is Required");
             username.requestFocus();
             return;
         }
-        if (Password.isEmpty()){
+        if (Password.isEmpty()) {
             password.setError("Password is Required");
             password.requestFocus();
             return;
         }
-        if(Password.length()<6){
+        if (Password.length() < 6) {
             password.setError("Minimum length should be 6");
             password.requestFocus();
             return;
         }
-        if (Confirm_Password.isEmpty()){
+        if (Confirm_Password.isEmpty()) {
             cnfpassword.setError("Confirm Password is Required");
             cnfpassword.requestFocus();
             return;
         }
-        if(!Confirm_Password.matches(Password)){
+        if (!Confirm_Password.matches(Password)) {
             cnfpassword.setError("Passwords not matched");
             password.requestFocus();
             return;
@@ -127,41 +139,42 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         progress.setVisibility(VISIBLE);
         text.setVisibility(VISIBLE);
         text.setText("Please wait....");
-        mAuth.createUserWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuth.createUserWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 text.setText("Registring user....");
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     progress.setVisibility(GONE);
                     text.setTextColor(GREEN);
-                   text.setText("User Regestation Successfull!!");
-                   progress.setVisibility(VISIBLE);
-                            text.setText("Sending please wait...");
-                            mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
-                                    progress.setVisibility(GONE);
-                                    text.setText("Please Verify and proceed to Login!!");
-                                    text.setTextColor(GREEN);
-                                    email.setText("");
-                                    password.setText("");
-                                    cnfpassword.setText("");
-                                    username.setText("");
-                                    name.setText("");
-                                    }else {
-                                      text.setText("Unable to send mail Try again");
-                                    }
-                                }
-                            });
+                    text.setText("User Regestation Successfull!!");
+                    progress.setVisibility(VISIBLE);
+                    text.setText("Sending please wait...");
+                    mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                progress.setVisibility(GONE);
+                                text.setText("Please Verify and proceed to Login!!");
+                                text.setTextColor(GREEN);
+                                login.setVisibility(VISIBLE);
+                                email.setText("");
+                                password.setText("");
+                                cnfpassword.setText("");
+                                username.setText("");
+                                name.setText("");
+                            } else {
+                                text.setText("Unable to send mail Try again");
+                            }
+                        }
+                    });
 
-                }else {
-                    if(task.getException()instanceof FirebaseAuthUserCollisionException){
+                } else {
+                    if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                         progress.setVisibility(GONE);
                         text.setTextColor(BLUE);
                         text.setText("User already registered, Proceed to Login  ");
                         login.setVisibility(VISIBLE);
-                    }else {
+                    } else {
                         progress.setVisibility(GONE);
                         text.setTextColor(RED);
                         text.setText("Regesrtion Unsuccessful ");
@@ -171,96 +184,6 @@ public class Signup extends AppCompatActivity implements View.OnClickListener {
         });
 
 
-
-     /*   Singup_thread=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    progress.setVisibility(VISIBLE);
-                    sleep(2000);
-                    text.setText("Click to Verify");
-                    text.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            users.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    progress.setVisibility(GONE);
-                                    Toast.makeText(Signup.this, "Verification mail sent successfully!!", Toast.LENGTH_LONG).show();
-                                    text.setText("Verify and proceed to Login!!");
-                                    text.setTextColor(GREEN);
-                                }
-                            });
-
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-*/
-       /* pause=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    sleep(2000);
-                    return;
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
-    }
-  /*  private void singin(){
-        mAuth.signInWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    text.setText("Verifying...");
-                    text.setTextColor(GREEN);
-                   EmailVerification();
-
-                }
-            }
-        });
-    }
-
-*/
- /*   private void EmailVerification() {
-        users.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                progress.setVisibility(GONE);
-                Toast.makeText(Signup.this, "Verification mail sent successfully!!", Toast.LENGTH_LONG).show();
-                text.setText("Verify and proceed to Login!!");
-                text.setTextColor(GREEN);
-                logout();
-            }
-        });
-    }
-
-    private void logout(){
-
-        FirebaseAuth.getInstance().signOut();
-        text.setText("your are succesfully singged out!!");
-    }
-
-*/
-
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.btnreg:
-                registerUser();
-                break;
-            case R.id.tvlogin:
-                startActivity(new Intent(Signup.this,Login.class));
-                break;
-        }
 
     }
 }

@@ -45,21 +45,18 @@ import java.io.IOException;
 
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.GREEN;
-import static java.lang.Thread.sleep;
 
 public class profile extends AppCompatActivity {
 
-    TextView tvVerification,displayname;
+    TextView tvVerification;
     private static final int CHOOSE_IMAGE =101 ;
     private FirebaseAuth mAuth;
     ImageView imageView;
     EditText name;
     Button upload;
     Uri uriprofileimage;
-    Thread toMain;
     ProgressBar progress,progress_bar;
     String  profileImageUrl;
-    FirebaseUser user;
     StorageReference mStoarageRef;
 
     @Override
@@ -71,15 +68,14 @@ public class profile extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mStoarageRef= FirebaseStorage.getInstance().getReference();
 
-        displayname=(TextView)findViewById(R.id.tvdispname);
-        imageView=(ImageView)findViewById(R.id.image);
+       imageView=(ImageView)findViewById(R.id.image);
         name=(EditText)findViewById(R.id.edit_txt);
         upload=(Button)findViewById(R.id.btnUpload);
         progress=(ProgressBar)findViewById(R.id.progress_bar);
         tvVerification=(TextView)findViewById(R.id.tvVerified);
         progress_bar=(ProgressBar)findViewById(R.id.progress_Bar);
 
-       // loadUserInfo();
+        loadUserInfo();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -99,34 +95,77 @@ public class profile extends AppCompatActivity {
 
         });
 
-        toMain=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    progress_bar.setVisibility(View.VISIBLE);
-                    sleep(2000);
-                    finish();
-                    startActivity(new Intent(profile.this,MainActivity.class));
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mAuth.getCurrentUser() == null) {
+        if(mAuth.getCurrentUser()==null){
             finish();
-            startActivity(new Intent(profile.this, Login.class));
+            startActivity(new Intent(profile.this,Login.class));
         }
     }
 
+<<<<<<< HEAD
+=======
+    private void loadUserInfo() {
+
+        final FirebaseUser user=mAuth.getCurrentUser();
+        if(user!=null) {
+            if (user.getPhotoUrl() != null) {
+                Glide.with(this)
+                        .load(user.getPhotoUrl().toString())
+                        .centerCrop()
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                progress.setVisibility(View.GONE);
+                                Log.e("TAG","Error loading Image",e);
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                progress.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
+                        .into(imageView);
+
+            }
+
+            if (user.getDisplayName() != null) {
+
+                name.setText(user.getDisplayName());
+            }
+        }
+
+        if(user.isEmailVerified()){
+            tvVerification.setText("Verified");
+            tvVerification.setTextColor(GREEN);
+        }else{
+            tvVerification.setText("Email Not Verified (Click to Verify)");
+            tvVerification.setTextColor(BLUE);
+            tvVerification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(profile.this,"Verification email Sent",Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+            });
+        }
+
+
+    }
+
+>>>>>>> parent of 97c439d... signout option added
     private void SaveUserInfo() {
         String Displayname=name.getText().toString();
-        displayname.setText(Displayname);
         if(Displayname.isEmpty()){
 
             name.setError("Please Enter your Name");
@@ -148,13 +187,10 @@ public class profile extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             progress_bar.setVisibility(View.GONE);
                             Toast.makeText(profile.this, "Profile Name updated", Toast.LENGTH_SHORT).show();
-
-                            name.setVisibility(View.GONE);
-                            displayname.setVisibility(View.VISIBLE);
-                            upload.setVisibility(View.GONE);
-                            toMain.start();
                         }
                     });
+
+            upload.setVisibility(View.GONE);
         }
 
 
@@ -194,9 +230,6 @@ public class profile extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     profileImageUrl = uri.toString();
-
-                                    //tvVerification.setText(profileImageUrl);
-                                    Toast.makeText(profile.this, "Profile Image Uploaded", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }

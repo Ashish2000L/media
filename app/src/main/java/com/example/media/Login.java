@@ -97,6 +97,23 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         textView.setVisibility(VISIBLE);
         textView.setTextColor(BLACK);
         textView.setText("Please wait....");
+<<<<<<< HEAD
+=======
+        mAuth.signInWithEmailAndPassword(Email,Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                progressBar.setVisibility(View.GONE);
+                HprogressBar.setVisibility(VISIBLE);
+                if(task.isSuccessful()){
+                   // textView.setText("Almost Done...");
+                   // textView.setTextColor(GREEN);
+                    if(users.isEmailVerified()&&(users.getDisplayName()!=null || users.getPhotoUrl()!=null)) {
+                        HprogressBar.setVisibility(View.GONE);
+                        textView.setText("Logging you in, Please wait....");
+                        textView.setTextColor(GREEN);
+                        finish();
+                        startActivity(new Intent(Login.this,MainActivity.class));
+>>>>>>> parent of 97c439d... signout option added
 
 
             Integer count=0;
